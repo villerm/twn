@@ -1,5 +1,5 @@
 <template>
-  <div class="container max-w-[1000px] m-auto text-left">
+  <div class="container article max-w-[1000px] m-auto text-left">
     <div v-if="loading">
       <img :src="loaderIcon" class="animate-spin w-28 h-28 mx-auto" />
     </div>

@@ -24,7 +24,7 @@
 * {
   box-sizing: border-box;
 }
-.container p {
-  margin: 2.5rem 0 !important;
+.article p {
+  margin: 2.5rem 0;
 }
 </style>

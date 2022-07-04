@@ -94,18 +94,14 @@
           </template>
         </tbody>
       </table>
-      <div class="pagination flex justify-center">
-        <button @click="changePages(-1)" class="p-6">
-          <FontAwesomeIcon icon="chevron-left" />
-        </button>
-        <div class="py-6 flex align-middle">
-          {{ currentPage / rowsPerPage + 1 }} /
-          {{ list.length / rowsPerPage }}
-        </div>
-        <button @click="changePages(1)" class="p-6">
-          <FontAwesomeIcon icon="chevron-right" />
-        </button>
-      </div>
+      <Pagination
+        :startPage="1"
+        :currentPage="currentPage"
+        :totalPages="list.length / rowsPerPage"
+        :perPage="rowsPerPage"
+        :maxVisibleButtons="5"
+        @pagechanged="changePages"
+      />
     </div>
   </div>
 </template>
@@ -114,6 +110,7 @@
 import { onMounted, ref, computed, watch } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import loaderIcon from "../assets/images/loader.svg";
+import Pagination from "../components/pagination.vue";
 
 const listTemplate = ref({
   firstname: "",
@@ -155,7 +152,7 @@ const list = ref([]);
 const errorMessage = ref("");
 const loading = ref(true);
 const rowsPerPage = ref(10);
-const currentPage = ref(0);
+const currentPage = ref(1);
 const activeItem = ref("");
 const activeFilters = ref({
   name: "",
@@ -165,8 +162,8 @@ const activeFilters = ref({
 const filteredList = computed(() => {
   const name = activeFilters.value.name;
   const sort = activeFilters.value.sort;
-  let start = currentPage.value;
-  let end = currentPage.value + rowsPerPage.value;
+  let start = (currentPage.value - 1) * rowsPerPage.value;
+  let end = start + rowsPerPage.value;
   let items = [...list.value];
   const results =
     sort === "" ? list.value : items.sort(sortMethods(name, sort));
@@ -280,10 +277,7 @@ function filterBy(name) {
 }
 
 function changePages(amount) {
-  var newStartRow = currentPage.value + amount * rowsPerPage.value;
-  if (newStartRow >= 0 && newStartRow < list.value.length) {
-    currentPage.value = newStartRow;
-  }
+  currentPage.value = amount;
 }
 function handleTableItem(id) {
   activeItem.value == id ? (activeItem.value = "") : (activeItem.value = id);
